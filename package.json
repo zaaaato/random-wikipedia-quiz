@@ -11,7 +11,7 @@
   "dependencies": {
     "daisyui": "^4.12.20",
     "groq-sdk": "^0.9.0",
-    "next": "15.0.4",
+    "next": "15.0.7",
     "node-html-parser": "^6.1.13",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
