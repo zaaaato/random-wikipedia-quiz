@@ -1,8 +1,8 @@
-"use server";
+'use server';
 
-import parse from "node-html-parser";
-import { groq } from "./groq";
-import { cleanArticleContent } from "./utils/cleanArticleContent";
+import parse from 'node-html-parser';
+import { groq } from './groq';
+import { cleanArticleContent } from './utils/cleanArticleContent';
 
 export const generateQuiz = async (): Promise<{
   question: string;
@@ -11,20 +11,20 @@ export const generateQuiz = async (): Promise<{
 }> => {
   try {
     const res = await fetch(
-      "https://ja.wikipedia.org/wiki/Special:Randompage",
+      'https://ja.wikipedia.org/wiki/Special:Randompage',
       {
-        cache: "no-store",
-      }
+        cache: 'no-store',
+      },
     );
     const randomArticle = await res.text();
     const url = res.url;
 
     const root = parse(randomArticle);
-    const titleElemId = "firstHeading";
-    const articleBodyElemId = "bodyContent";
+    const titleElemId = 'firstHeading';
+    const articleBodyElemId = 'bodyContent';
     const title = root.getElementById(titleElemId)?.text;
     const content = cleanArticleContent(
-      root.getElementById(articleBodyElemId)!.text
+      root.getElementById(articleBodyElemId)!.text,
     ).slice(0, 5000);
 
     const prompt = `
@@ -45,9 +45,9 @@ export const generateQuiz = async (): Promise<{
   `;
     const quizJSON = await groq.chat.completions
       .create({
-        messages: [{ role: "user", content: prompt }],
-        model: "llama-3.3-70b-versatile",
-        response_format: { type: "json_object" },
+        messages: [{ role: 'user', content: prompt }],
+        model: 'openai/gpt-oss-120b',
+        response_format: { type: 'json_object' },
       })
       .then((completion) => completion.choices[0].message.content);
 
@@ -58,7 +58,7 @@ export const generateQuiz = async (): Promise<{
         })
       : null;
 
-    if (!quiz) throw new Error("Failed to generate quiz");
+    if (!quiz) throw new Error('Failed to generate quiz');
 
     return {
       ...quiz,
@@ -66,6 +66,6 @@ export const generateQuiz = async (): Promise<{
     };
   } catch (error) {
     console.error(error);
-    throw new Error("Failed to generate quiz");
+    throw new Error('Failed to generate quiz');
   }
 };
